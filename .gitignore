@@ -60,3 +60,5 @@ typings/
 .env
 
 
+/.idea/
+/edx-nodejs-lab02.iml
