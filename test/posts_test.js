@@ -5,7 +5,7 @@ const expect = require('chai').expect
 let store = require('../models/post')
 
 after(function (done) {
-  console.log('About to exit, waiting for remaining connections to complete');
+  console.log('exiting');
   server.close()
   done()
 });
@@ -24,49 +24,7 @@ function storePost() {
   )
 }
 
-describe('READ posts', function () {
-  it('returns an empty array when called the first time', (done) => {
-    request(app)
-      .get('/posts')
-      .end((err, res) => {
-        expect(res.status).to.equal(200);
-        expect(res.body.length).to.equal(0);
-        done();
-      })
-  })
-  it('returns a single post', (done) => {
-    storePost();
-    request(app)
-      .get(`/posts?postId=0`)
-      .end((err, res) => {
-        expect(res.status).to.equal(200);
-        expect(res.body.name).to.equal('Top 10 ES6 Features');
-        done();
-      })
-  })
-  it('checks wrong query parameters in GET', (done) => {
-    storePost();
 
-    request(app)
-      .get(`/posts?postId=foo`)
-      .end((err, res) => {
-        expect(res.status).to.equal(400);
-        done();
-      })
-  })
-  it('checks out of index query parameters in GET', (done) => {
-    storePost();
-
-    request(app)
-      .get(`/posts?postId=1`)
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
-        done();
-      })
-  })
-
-})
-//
 describe('CREATE posts', function () {
   it('creates an item ', (done) => {
     let post = {
@@ -133,7 +91,48 @@ describe('CREATE posts', function () {
       });
   })
 })
+describe('READ posts', function () {
+  it('returns an empty array when called the first time', (done) => {
+    request(app)
+      .get('/posts')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.length).to.equal(0);
+        done();
+      })
+  })
+  it('returns a single post', (done) => {
+    storePost();
+    request(app)
+      .get(`/posts?postId=0`)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.name).to.equal('Top 10 ES6 Features');
+        done();
+      })
+  })
+  it('checks wrong query parameters in GET', (done) => {
+    storePost();
 
+    request(app)
+      .get(`/posts?postId=foo`)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      })
+  })
+  it('checks out of index query parameters in GET', (done) => {
+    storePost();
+
+    request(app)
+      .get(`/posts?postId=1`)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        done();
+      })
+  })
+
+})
 describe('UPDATE posts', function () {
   it('update an item ', (done) => {
     storePost()
