@@ -10,7 +10,6 @@ store.accounts = []
 let app = express()
 app.use(bodyParser.json())
 app.use(logger('dev'))
-app.use(errorhandler({log: errorNotification}))
 
 app.get('/posts', (req, res) =>
     routes.posts.getPosts(req, res)
@@ -44,9 +43,5 @@ app.delete('/posts/:postId/comments/:commentId', (req, res) => {
   routes.comments.removeComment(req, res)
 })
 
-function errorNotification(err, str, req) {
-  res.status(404).send(`{ error lab02: ${str} }`)
-
-}
-
-app.listen(3000)
+const server = app.listen(3000)
+module.exports = {app: app, server: server} // for testing
