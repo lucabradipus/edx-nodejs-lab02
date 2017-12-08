@@ -187,5 +187,16 @@ describe('UPDATE posts', function () {
       })
 
   })
-
+})
+describe('DELETE posts', (done) => {
+  it('discards extra params in json ', (done) => {
+    storePost()
+    request(app)
+      .delete('/posts/0')
+      .end((err, res) => {
+        expect(res.status).to.equal(204);
+        expect(store.posts.length).to.equal(0);
+        done();
+      })
+  })
 })
