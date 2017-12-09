@@ -173,14 +173,13 @@ describe('UPDATE posts', function () {
       .send(update)
       .end((err, res) => {
         expect(res.status).to.equal(406);
-        expect(res.body.extra).to.equal(undefined);
         done();
       })
 
   })
 })
 describe('DELETE posts', (done) => {
-  it('discards extra params in json ', (done) => {
+  it('deletes a post ', (done) => {
     initPost()
     request(app)
       .delete('/posts/0')

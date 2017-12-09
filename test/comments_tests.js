@@ -104,7 +104,7 @@ describe('READ comments', function () {
         done();
       })
   })
-  it('returns a single commetns', (done) => {
+  it('returns a single comment', (done) => {
     initComment();
 
     request(app)
@@ -115,11 +115,89 @@ describe('READ comments', function () {
         done();
       })
   })
+  it('checks wrong query parameters in GET', (done) => {
+    initComment();
+
+    request(app)
+      .get(`/posts/0/comments?commentId=foo`)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      })
+
+  })
+  it('checks out of index query parameters in GET', (done) => {
+    initComment();
+    request(app)
+      .get(`/posts/0/comments?commentId=1`)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      })
+
+  })
 
 })
 
 
 describe('UPDATE comments', function () {
+  it('update an item ', (done) => {
+    initComment()
+    let update = {
+      text: 'updated'
+    }
+    request(app)
+      .put('/posts/0/comments/0')
+      .send(update)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.text).to.equal("updated");
+        done();
+      })
+  })
+  it('DOES NOT accept invalid json ', (done) => {
+    initComment()
+    let update = {
+      text: ''
+    }
+    request(app)
+      .put('/posts/0/comments/0')
+      .send(update)
+      .end((err, res) => {
+        expect(res.status).to.equal(406);
+        done();
+      })
+
+  })
+  it('discards extra params in json ', (done) => {
+    initComment()
+    let update = {
+      text: "updated",
+      extra: "extra param"
+    }
+    request(app)
+      .delete('/posts/0/comments/0')
+      .send(update)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.text).to.equal("updated");
+        expect(res.body.extra).to.equal(undefined);
+        done();
+      })
+
+  })
+
 })
 describe('DELETE comments', function () {
+  it('deletes a comment ', (done) => {
+    initComment()
+    request(app)
+      .delete('/posts/0/comments/0')
+      .end((err, res) => {
+        expect(res.status).to.equal(204);
+        expect(store.posts[0].comments.length).to.equal(0);
+        done();
+      })
+  })
+
 })

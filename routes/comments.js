@@ -26,10 +26,14 @@ module.exports = {
     let data = []
     posts = util.retrievePost(req.params.postId)
     if (posts.comments) {
-      const cIndex = parseInt(req.query.commentId)
-      if (util.isNumber(cIndex)) {
-        data = store.posts[req.params.postId].comments[cIndex]
-        if (!data) {
+      if (req.query.commentId) {
+        const cIndex = parseInt(req.query.commentId)
+        if (util.isNumber(cIndex)) {
+          data = store.posts[req.params.postId].comments[cIndex]
+          if (!data) {
+            return res.status(400).send()
+          }
+        } else {
           return res.status(400).send()
         }
       } else {
@@ -55,8 +59,11 @@ module.exports = {
   }
   ,
   updateComment(req, res) {
-    store.posts[req.params.postId].comments[req.params.commentId] = req.body
-    res.status(204).send()
+    const validation = validatePayload(req.body)
+    if (!validation.success) return res.status(406).send(validation.response)
+    let updatedComment = createComment(req.body)
+    store.posts[req.params.postId].comments[req.params.commentId] = updatedComment
+    res.status(200).send(store.posts[req.params.postId].comments[req.params.commentId])
   }
   ,
   removeComment(req, res) {
