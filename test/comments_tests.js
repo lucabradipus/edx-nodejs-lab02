@@ -176,7 +176,7 @@ describe('UPDATE comments', function () {
       extra: "extra param"
     }
     request(app)
-      .delete('/posts/0/comments/0')
+      .put('/posts/0/comments/0')
       .send(update)
       .end((err, res) => {
         expect(res.status).to.equal(200);
