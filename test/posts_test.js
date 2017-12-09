@@ -2,10 +2,11 @@ const request = require('supertest');
 const app = require('../server').app;
 const server = require('../server').server;
 const expect = require('chai').expect
-let store = require('../models/post')
+const store = require('../models/post')
+const util = require('./commons')
+const initPost = util.storePost
 
 after(function (done) {
-  console.log('exiting');
   server.close()
   done()
 });
@@ -14,15 +15,6 @@ afterEach(function (done) {
   store.posts = []
   done()
 })
-
-function storePost() {
-  store.posts.push({
-      name: "Top 10 ES6 Features",
-      url: "http://webapplog.com/es6",
-      text: ""
-    }
-  )
-}
 
 
 describe('CREATE posts', function () {
@@ -74,7 +66,7 @@ describe('CREATE posts', function () {
 
   })
 
-  it('DOES NOT create an item with malformed Json', (done) => {
+  it('DOES NOT create an item with wrong parameters', (done) => {
     request(app)
     let post = {
       name: "",
@@ -102,7 +94,7 @@ describe('READ posts', function () {
       })
   })
   it('returns a single post', (done) => {
-    storePost();
+    initPost();
     request(app)
       .get(`/posts?postId=0`)
       .end((err, res) => {
@@ -112,7 +104,7 @@ describe('READ posts', function () {
       })
   })
   it('checks wrong query parameters in GET', (done) => {
-    storePost();
+    initPost();
 
     request(app)
       .get(`/posts?postId=foo`)
@@ -122,12 +114,12 @@ describe('READ posts', function () {
       })
   })
   it('checks out of index query parameters in GET', (done) => {
-    storePost();
+    initPost();
 
     request(app)
       .get(`/posts?postId=1`)
       .end((err, res) => {
-        expect(res.status).to.equal(404);
+        expect(res.status).to.equal(400);
         done();
       })
   })
@@ -135,7 +127,7 @@ describe('READ posts', function () {
 })
 describe('UPDATE posts', function () {
   it('update an item ', (done) => {
-    storePost()
+    initPost()
     let update = {
       name: "updated",
       url: "http://webapplog.com/es6",
@@ -152,7 +144,7 @@ describe('UPDATE posts', function () {
 
   })
   it('discards extra params in json ', (done) => {
-    storePost()
+    initPost()
     let update = {
       name: "updated",
       url: "http://webapplog.com/es6",
@@ -170,7 +162,7 @@ describe('UPDATE posts', function () {
 
   })
   it('DOES NOT accept invalid json ', (done) => {
-    storePost()
+    initPost()
     let update = {
       name: "",
       url: "http://webapplog.com/es6",
@@ -189,7 +181,7 @@ describe('UPDATE posts', function () {
 })
 describe('DELETE posts', (done) => {
   it('discards extra params in json ', (done) => {
-    storePost()
+    initPost()
     request(app)
       .delete('/posts/0')
       .end((err, res) => {

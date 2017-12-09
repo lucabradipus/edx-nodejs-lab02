@@ -5,7 +5,6 @@ const bodyParser = require('body-parser')
 const routes = require('./routes')
 
 store = require('./models/post')
-store.accounts = []
 
 let app = express()
 app.use(bodyParser.json())
