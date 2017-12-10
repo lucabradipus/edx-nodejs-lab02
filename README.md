@@ -19,7 +19,7 @@ I tried to learn something about testing using Mocha, chai, chai-http and super-
 
 **running**
 
-You cannot execute **npm test** when the server is running because testing launches its own server on the same port
+You cannot execute **npm test** when the server is already running because testing launches its own server on the same port
 
 **dependencies**
 
