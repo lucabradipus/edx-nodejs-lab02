@@ -2,7 +2,7 @@
 # edx-nodejs-lab02
 Module 2 assignment lab in edX introduction to NodeJS 
 
-here is the repository https://github.com/lucabradipus/csv2JsonConverter.git
+here is the repository https://github.com/lucabradipus/edx-nodejs-lab02.git
 
 **Testing**
 
