@@ -12,10 +12,14 @@ after npm install you can run either
 or 
     
     ./node_modules/.bin/mocha  
+        
 
-I tried a real test suite: I use Mocha, chai  chai-http () and super-agent to run the server when testing
-I use payload-validator to verify the correct json format
+I tried to learn something about testing using Mocha, chai, chai-http and super-agent 
 
+
+**running**
+
+You cannot execute **npm test** when the server is running because testing launches its own server on the same port
 
 **dependencies**
 
