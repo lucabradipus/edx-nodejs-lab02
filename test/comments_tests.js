@@ -24,8 +24,8 @@ function initComment() {
       text: ""
     }
   )
-  store.posts[0].comments = []
-  store.posts[0].comments.push({
+  store.posts[store.posts.length - 1].comments = []
+  store.posts[store.posts.length - 1].comments.push({
     text: "a comment"
   })
 }
@@ -131,7 +131,7 @@ describe('READ comments', function () {
     request(app)
       .get(`/posts/0/comments?commentId=1`)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
+        expect(res.status).to.equal(404);
         done();
       })
 
@@ -199,5 +199,32 @@ describe('DELETE comments', function () {
         done();
       })
   })
+  // this test is quite trivial, but can be useful if implementation will change
+  it('deleting a post deletes realated comments ', (done) => {
+    initComment()
+    request(app)
+      .delete('/posts/0')
+      .end((err, res) => {
+        expect(res.status).to.equal(204);
+        expect(store.posts[0]).to.equal(undefined);
+        done();
+      })
+  })
 
+  it('deleting a post move the other posts and the related comments ', (done) => {
+    initComment()
+    initComment()
+    store.posts[1].comments.push({
+      text: "a second comment"
+    })
+    expect(store.posts[1].comments[1].text).to.equal("a second comment");
+
+    request(app)
+      .delete('/posts/0')
+      .end((err, res) => {
+        expect(res.status).to.equal(204);
+        expect(store.posts[0].comments[1].text).to.equal("a second comment");
+        done();
+      })
+  })
 })

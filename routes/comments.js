@@ -23,20 +23,27 @@ function isNumber(n) {
 module.exports = {
   getComments(req, res) {
 
+    // returned value is initialised to empty array
     let data = []
     posts = util.retrievePost(req.params.postId)
+    //comments are already initialized ?
     if (posts.comments) {
+      // is a request for a single comment ?
       if (req.query.commentId) {
         const cIndex = parseInt(req.query.commentId)
+        // is the parameter correct?
         if (util.isNumber(cIndex)) {
           data = store.posts[req.params.postId].comments[cIndex]
+          //comment not found
           if (!data) {
-            return res.status(400).send()
+            return res.status(404).send()
           }
         } else {
+          //bad request
           return res.status(400).send()
         }
       } else {
+       // client asked for all available parameters
         data = posts.comments
       }
     }
