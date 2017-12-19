@@ -152,7 +152,13 @@ describe('UPDATE comments', function () {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.text).to.equal("updated");
-        done();
+        request(app)
+            .get(`/posts/0/comments?commentId=0`)
+            .end((err, res) => {
+              expect(res.status).to.equal(200);
+              expect(res.body.text).to.equal("updated");
+              done();
+            })
       })
   })
   it('DOES NOT accept invalid json ', (done) => {

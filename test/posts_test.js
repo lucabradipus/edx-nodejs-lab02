@@ -139,7 +139,12 @@ describe('UPDATE posts', function () {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.name).to.equal("updated");
-        done();
+        request(app)
+            .get(`/posts?postId=0`)
+            .end((err, res) => {
+              expect(res.body.name).to.equal("updated");
+              done();
+            })
       })
 
   })
