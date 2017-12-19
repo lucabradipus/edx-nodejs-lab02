@@ -43,8 +43,8 @@ module.exports = {
     const validation = validatePayload(req.body)
     if (!validation.success) return res.status(406).send(validation.response)
     let updatedPost = createPost(req.body)
-    store.posts[req.params.id] = updatedPost
-    res.status(200).send(store.posts[req.params.id])
+    store.posts[req.params.postId] = updatedPost
+    res.status(200).send(store.posts[req.params.postId])
 
   },
   removePost(req, res) {
